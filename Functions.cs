@@ -1,30 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
-using Amazon.Lambda.RuntimeSupport;
 using Tweetinvi;
+
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
 namespace HelloWorldTwitterLambda
 {
-    public class Functions
+    public static class Functions
     {
-        /// <summary>
-        /// The main entry point for the custom runtime.
-        /// </summary>
-        public static async Task Main()
-        {
-            Func<ILambdaContext, Task> handler = FunctionHandler;
-            using var handlerWrapper = HandlerWrapper.GetHandlerWrapper(handler);
-            using var bootstrap = new LambdaBootstrap(handlerWrapper);
-            await bootstrap.RunAsync();
-        }
-
         /// <summary>
         /// A simple function that posts a Tweet saying "Hello world!"
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal static async Task FunctionHandler(ILambdaContext context)
+        public static async Task HelloWorld(ILambdaContext context)
         {
             var credentials = await SecretManager.GetTwitterCredentials(context);
 
@@ -34,7 +24,7 @@ namespace HelloWorldTwitterLambda
 
             try
             {
-                me.PublishTweet("This is a test tweet, please ignore it!!");
+                me.PublishTweet("Hello world!!!");
             }
             catch (Exception e)
             {
